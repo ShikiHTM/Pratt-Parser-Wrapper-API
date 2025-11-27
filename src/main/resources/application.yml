@@ -1,0 +1,14 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: pratt-parser-api
+
+logging:
+  level:
+    root: INFO
+    org.shiki.prattparserrestfulapi: DEBUG
