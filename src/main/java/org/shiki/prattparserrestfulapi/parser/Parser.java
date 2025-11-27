@@ -1,12 +1,13 @@
 package org.shiki.prattparserrestfulapi.parser;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apfloat.Apfloat;
 
 import java.util.Arrays;
 
 @Slf4j
 public class Parser {
-    public static double eval(String input) {
+    public static Apfloat eval(String input) {
         log.info("Starting evaluation for expression: {}", input);
 
         return expr(input).eval();

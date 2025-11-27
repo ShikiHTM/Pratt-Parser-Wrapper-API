@@ -1,5 +1,6 @@
 package org.shiki.prattparserrestfulapi.api;
 
+import org.apfloat.Apfloat;
 import org.shiki.prattparserrestfulapi.helper.ApiResponse;
 import org.shiki.prattparserrestfulapi.service.ExpressionService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,15 +21,15 @@ public class ExpressionController {
     }
 
     @GetMapping("/evaluate")
-    public ApiResponse<Double> evaluate(@RequestParam String expr) {
-        double result = expressionService.evaluate(expr);
-        return ApiResponse.ok(result);
+    public ApiResponse<String> evaluate(@RequestParam String expr) {
+        Apfloat result = expressionService.evaluate(expr);
+        return ApiResponse.ok(result.toString(true));
     }
 
     @PostMapping("/evaluate")
-    public ApiResponse<Double> evaluatePost(@RequestBody ExpressionRequest request) {
-        double result = expressionService.evaluate(request.expr);
-        return ApiResponse.ok(result);
+    public ApiResponse<String> evaluatePost(@RequestBody ExpressionRequest request) {
+        Apfloat result = expressionService.evaluate(request.expr);
+        return ApiResponse.ok(result.toString(true));
     }
 
     //Request DTO
