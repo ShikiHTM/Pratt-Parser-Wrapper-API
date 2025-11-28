@@ -1,10 +1,7 @@
 package org.shiki.prattparserrestfulapi.parser;
 
 import java.util.List;
-import java.lang.Math.*;
 import org.apfloat.*;
-
-import org.shiki.prattparserrestfulapi.parser.*;
 
 public abstract class LipsNotation {
     public abstract String toString();
@@ -37,6 +34,10 @@ public abstract class LipsNotation {
             this.rest = rest;
         }
 
+        // Accessors used by Parser for higher-level pattern detection (points etc.)
+        public String head() { return head; }
+        public List<LipsNotation> rest() { return rest; }
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -67,6 +68,22 @@ public abstract class LipsNotation {
                 case "%" -> rest.get(0).eval().mod(rest.get(1).eval());
                 case "!" -> factorial(rest.get(0).eval());
                 case "^" -> ApfloatMath.pow(rest.get(0).eval(), rest.get(1).eval());
+                case "sin" -> ApfloatMath.sin(rest.get(0).eval());
+                case "cos" -> ApfloatMath.cos(rest.get(0).eval());
+                case "tan" -> ApfloatMath.tan(rest.get(0).eval());
+                case "log" -> {
+                    // support log(x) -> natural log, and log(base, x) -> log base 'base' of x
+                    if (rest.size() == 1) {
+                        yield ApfloatMath.log(rest.get(0).eval());
+                    } else if (rest.size() == 2) {
+                        Apfloat base = rest.get(0).eval();
+                        Apfloat val = rest.get(1).eval();
+                        yield ApfloatMath.log(val).divide(ApfloatMath.log(base));
+                    } else {
+                        throw new RuntimeException("log expects 1 or 2 arguments");
+                    }
+                }
+                case "ln" -> ApfloatMath.log(rest.get(0).eval(), ApfloatMath.e(1000));
                 default -> throw new RuntimeException("Unknown operator: " + head);
             };
         }

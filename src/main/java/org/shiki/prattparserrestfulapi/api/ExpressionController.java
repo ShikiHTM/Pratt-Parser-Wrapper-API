@@ -1,8 +1,9 @@
 package org.shiki.prattparserrestfulapi.api;
 
-import org.apfloat.Apfloat;
 import org.shiki.prattparserrestfulapi.helper.ApiResponse;
 import org.shiki.prattparserrestfulapi.service.ExpressionService;
+import org.shiki.prattparserrestfulapi.parser.EvalResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1/expression")
+@CrossOrigin(origins = "*")
 public class ExpressionController {
 
     private final ExpressionService expressionService;
@@ -21,15 +23,15 @@ public class ExpressionController {
     }
 
     @GetMapping("/evaluate")
-    public ApiResponse<String> evaluate(@RequestParam String expr) {
-        Apfloat result = expressionService.evaluate(expr);
-        return ApiResponse.ok(result.toString(true));
+    public ApiResponse<EvalResult> evaluate(@RequestParam String expr) {
+        EvalResult result = expressionService.evaluate(expr);
+        return ApiResponse.ok(result);
     }
 
     @PostMapping("/evaluate")
-    public ApiResponse<String> evaluatePost(@RequestBody ExpressionRequest request) {
-        Apfloat result = expressionService.evaluate(request.expr);
-        return ApiResponse.ok(result.toString(true));
+    public ApiResponse<EvalResult> evaluatePost(@RequestBody ExpressionRequest request) {
+        EvalResult result = expressionService.evaluate(request.expr);
+        return ApiResponse.ok(result);
     }
 
     //Request DTO

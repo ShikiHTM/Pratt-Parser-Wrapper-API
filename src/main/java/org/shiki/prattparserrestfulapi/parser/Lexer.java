@@ -56,4 +56,30 @@ public class Lexer {
         log.trace("PEEK: Token at pos {}: {}", pos, token);
         return token;
     }
+
+    /**
+     * Scan ahead from current position and return true if there's a top-level comma
+     * before the matching closing parenthesis. This helps decide whether a '(' .. ')'
+     * should be treated as a grouping (single expression) or a tuple (comma-separated elements).
+     */
+    public boolean hasTopLevelCommaUntilClosingParen() {
+        int depth = 0;
+        for (int i = pos; i < tokens.size(); i++) {
+            Token t = tokens.get(i);
+            if (t.type == Token.Type.OP) {
+                String v = t.value;
+                if (v.equals("(")) {
+                    depth++;
+                } else if (v.equals(")")) {
+                    if (depth == 0) {
+                        return false;
+                    }
+                    depth--;
+                } else if (v.equals(",") && depth == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
